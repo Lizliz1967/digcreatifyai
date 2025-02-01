@@ -1,1 +1,10 @@
+# requirements.txt - Dependencies for DigCreatifyAI Streamlit App
+
+streamlit
+openai
+transformers
+numpy
+pandas
+gunicorn
+pillow
 
