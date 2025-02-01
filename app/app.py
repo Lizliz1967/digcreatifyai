@@ -1,8 +1,15 @@
-# app.py
+# app.py - DigCreatifyAI Streamlit Application
 
-import streamlit as st
-from models import generate_text, recommend_templates  # Correct the import here
+import sys
+import os
+
+# Add the parent directory to sys.path so Python can find the modules
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+# Import AI Models and Templates
+from models.models import generate_text, recommend_templates
 from templates_recommendations import templates
+import streamlit as st
 
 # Streamlit App Title
 st.title("DigCreatifyAI - Create Digital Products with AI")
