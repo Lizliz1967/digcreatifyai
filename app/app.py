@@ -1,7 +1,7 @@
 # streamlit_app.py - DigCreatifyAI Streamlit Deployment
 
 import streamlit as st
-from models import generate_text, recommend_templates
+from models.models import generate_text, recommend_templates  # Correct import path
 from templates_recommendations import templates
 
 # Streamlit App Title
