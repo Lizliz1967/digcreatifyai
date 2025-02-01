@@ -1,68 +1,49 @@
-# DigCreatifyAI - AI Code Structure & Implementation
+# streamlit_app.py - DigCreatifyAI Streamlit Deployment
 
-## 1. Required Dependencies
-# Install necessary libraries
-!pip install transformers openai pillow numpy pandas
+import streamlit as st
+from models import generate_text, recommend_templates
+from templates_recommendations import templates
 
-import os
-import openai
-from transformers import pipeline
-from PIL import Image, ImageDraw, ImageFont
-import numpy as np
-import pandas as pd
+# Streamlit App Title
+st.title("DigCreatifyAI - Create Digital Products with AI")
+st.markdown("### Where Your Digital Downloads Come to Life!")
 
-# API Keys (Replace with your own keys)
-openai.api_key = "YOUR_OPENAI_API_KEY"
+# Sidebar Navigation
+st.sidebar.header("Navigation")
+page = st.sidebar.radio("Go to", ["Home", "Generate Content", "Template Recommendations", "Preview Templates"])
 
-## 2. AI Content Generation (eBooks, Printables, Templates)
-def generate_text(prompt, model="text-davinci-003", max_tokens=500):
-    """Generates AI-driven text for digital content."""
-    response = openai.Completion.create(
-        engine=model,
-        prompt=prompt,
-        max_tokens=max_tokens
-    )
-    return response["choices"][0]["text"].strip()
+# Home Page
+if page == "Home":
+    st.header("Welcome to DigCreatifyAI!")
+    st.write("This AI-powered tool helps you generate and customize digital products effortlessly.")
 
-## 3. AI-Powered Template Customization
-def create_custom_printable(text, image_path=None, output_file="output.png"):
-    """Generates a printable with custom text and an optional image."""
-    img = Image.new('RGB', (800, 600), color=(255, 255, 255))
-    draw = ImageDraw.Draw(img)
-    font = ImageFont.load_default()
-    draw.text((50, 50), text, fill=(0, 0, 0), font=font)
-    
-    if image_path:
-        overlay = Image.open(image_path)
-        overlay = overlay.resize((200, 200))
-        img.paste(overlay, (300, 200))
-    
-    img.save(output_file)
-    print(f"Printable saved as {output_file}")
+# Content Generation Section
+elif page == "Generate Content":
+    st.header("Generate AI Content")
+    prompt = st.text_area("Enter your prompt for content generation")
+    if st.button("Generate Content"):
+        if prompt:
+            result = generate_text(prompt)
+            st.subheader("Generated Content:")
+            st.write(result)
+        else:
+            st.warning("Please enter a prompt before generating content.")
 
-## 4. AI-Driven Recommendations
-def recommend_templates(user_history):
-    """Provides personalized template recommendations."""
-    templates = ["Minimalist", "Modern", "Classic", "Artistic"]
-    return np.random.choice(templates, 2, replace=False).tolist()
+# Template Recommendation Section
+elif page == "Template Recommendations":
+    st.header("AI-Powered Template Recommendations")
+    category = st.selectbox("Select a category", ["ebook", "printable", "design_template"])
+    if st.button("Recommend Template"):
+        recommendation = recommend_templates({"category": category})
+        st.subheader("Recommended Template:")
+        st.json(recommendation)
 
-## 5. Export Options
-def export_design(content, file_format="pdf"):
-    """Exports the generated content into different formats."""
-    if file_format == "pdf":
-        with open("output.pdf", "w") as f:
-            f.write(content)
-        print("File exported as output.pdf")
-    else:
-        print("Unsupported format.")
+# Preview Templates
+elif page == "Preview Templates":
+    st.header("Preview Available Templates")
+    if st.checkbox("Show Templates"):
+        st.write(templates)
 
-## Example Usage
-ebook_content = generate_text("Write an introduction for an eBook on digital art.")
-print(ebook_content)
-
-custom_template = create_custom_printable("Your Custom Printable", image_path=None)
-recommended_templates = recommend_templates(user_history=None)
-print(f"Recommended Templates: {recommended_templates}")
-
-export_design(ebook_content, "pdf")
-
+# Run the Streamlit App
+if __name__ == "__main__":
+    st.write("Ready to deploy on Streamlit!")
